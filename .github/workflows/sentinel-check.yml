@@ -18,5 +18,4 @@ jobs:
 
       - name: Run Sentinel Scan
         run: |
-          # Запуск сканирования того, что прислал клиент
-          sentinel scan --path .
+          sentinel scan .
