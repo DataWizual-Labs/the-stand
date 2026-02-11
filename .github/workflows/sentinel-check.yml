@@ -1,0 +1,22 @@
+name: Sentinel Security Gate
+
+on: [push]
+
+jobs:
+  check-security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout client code
+        uses: actions/checkout@v4
+
+      - name: Install Sentinel Engine
+        env:
+           TOKEN: ${{ secrets.SENTINEL_INSTALL_TOKEN }}
+        run: |
+          git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
+          pip install git+https://github.com/DataWizual-Labs/Sentinel-Engine.git@main
+
+      - name: Run Sentinel Scan
+        run: |
+          # Запуск сканирования того, что прислал клиент
+          sentinel scan --path .
