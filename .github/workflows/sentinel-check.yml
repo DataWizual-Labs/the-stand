@@ -11,9 +11,9 @@ jobs:
 
       - name: Install Sentinel Engine
         env:
-          TOKEN: ${{ secrets.INSTALL_TOKEN }}
+          SENTINEL_INSTALL_TOKEN: ${{ secrets.SENTINEL_INSTALL_TOKEN }}
         run: |
-          git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
+          git config --global url."https://x-access-token:${SENTINEL_INSTALL_TOKEN}@github.com/".insteadOf "https://github.com/"
           python -m pip install --upgrade pip
           pip install git+https://github.com/DataWizual-Labs/Sentinel-Engine.git@main
 
@@ -23,11 +23,7 @@ jobs:
           SENTINEL_ALERT_TOKEN: ""
           SENTINEL_CONFIG: "./sentinel.yaml"
         run: |
-          # Используем перенаправление потока (tee), чтобы видеть лог в консоли 
-          # и одновременно сохранить его в файл, даже если команда завершится ошибкой.
-          # 'set -o pipefail' гарантирует, что мы поймаем exit code от sentinel, а не от tee.
-          set -o pipefail
-          sentinel scan . | tee sentinel_report.txt
+          sentinel scan . --report sentinel_report.txt
 
       - name: Upload Security Report
         if: always()
@@ -35,4 +31,3 @@ jobs:
         with:
           name: sentinel-security-report
           path: sentinel_report.txt
-          retention-days: 5
