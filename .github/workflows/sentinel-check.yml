@@ -23,11 +23,19 @@ jobs:
           SENTINEL_ALERT_TOKEN: ""
           SENTINEL_CONFIG: "./sentinel.yaml"
         run: |
-          sentinel scan . --report
+          sentinel scan . --report || true
 
       - name: Upload Security Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sentinel-security-report
-          path: sentinel_report.txt
+          path: reports/
+          if-no-files-found: error
+
+      - name: Enforcement Gate
+        run: |
+          if grep -q "BLOCK" reports/*; then
+            echo "❌ Sentinel: Critical security violations detected. Pipeline blocked."
+            exit 1
+          fi
