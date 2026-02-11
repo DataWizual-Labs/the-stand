@@ -18,22 +18,29 @@ jobs:
           pip install git+https://github.com/DataWizual-Labs/Sentinel-Engine.git@main
 
       - name: Run Sentinel Analysis
+        id: scan
         env:
-          SENTINEL_ADMIN_REPO: ""
-          SENTINEL_ALERT_TOKEN: ""
+          SENTINEL_ADMIN_REPO: "DataWizual-Labs/Sentinel-Engine"
+          SENTINEL_ALERT_TOKEN: ${{ secrets.SENTINEL_INSTALL_TOKEN }}
           SENTINEL_CONFIG: "./sentinel.yaml"
         run: |
           sentinel scan . --report > full_sentinel_log.txt 2>&1
+
       - name: Upload Security Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sentinel-security-report
-          path: full_sentinel_log.txt
+          path: |
+            full_sentinel_log.txt
+            reports/
 
-      - name: Enforcement Gate
+      - name: Final Enforcement
+        if: always()
         run: |
-          if grep -q "BLOCK" full_sentinel_log.txt; then
-            echo "❌ Sentinel: Critical violations detected. Check the artifact."
-            exit 1
+          if grep -q "BLOCK" full_sentinel_log.txt || [ -d "reports" ]; then
+            if grep -r "BLOCK" . ; then
+               echo "❌ Sentinel: Violations found. Check artifacts."
+               exit 1
+            fi
           fi
