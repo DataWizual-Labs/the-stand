@@ -11,7 +11,7 @@ jobs:
 
       - name: Install Sentinel Engine
         env:
-          TOKEN: ${{ secrets.SENTINEL_INSTALL_TOKEN }}
+          TOKEN: ${{ secrets.INSTALL_TOKEN }}
         run: |
           git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
           python -m pip install --upgrade pip
@@ -19,9 +19,22 @@ jobs:
 
       - name: Run Sentinel Analysis
         env:
-          SENTINEL_ADMIN_REPO: "DataWizual-Labs/Sentinel-Engine"
-          SENTINEL_ALERT_TOKEN: ${{ secrets.SENTINEL_INSTALL_TOKEN }}
+          SENTINEL_ADMIN_REPO: ""
+          SENTINEL_ALERT_TOKEN: ""
           SENTINEL_CONFIG: "./sentinel.yaml"
-          DEBUG: "true"
         run: |
-          sentinel scan .
+          sentinel scan . --report sentinel_report.txt || export SCAN_FAILED=true
+
+      - name: Upload Security Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: sentinel-security-report
+          path: sentinel_report.txt
+          retention-days: 5
+
+      - name: Enforcement Gate
+        run: |
+          if [ -f sentinel_report.txt ] && grep -q "BLOCK" sentinel_report.txt; then
+            echo "❌ Sentinel: Critical security violations detected. Check the report artifact."
+            exit 1
+          fi
