@@ -1,6 +1,6 @@
-name: Sentinel Security Gate
+name: "Sentinel Security Gate"
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   check-security:
@@ -11,11 +11,16 @@ jobs:
 
       - name: Install Sentinel Engine
         env:
-           TOKEN: ${{ secrets.SENTINEL_INSTALL_TOKEN }}
+          TOKEN: ${{ secrets.SENTINEL_INSTALL_TOKEN }}
         run: |
           git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
+          python -m pip install --upgrade pip
           pip install git+https://github.com/DataWizual-Labs/Sentinel-Engine.git@main
 
-      - name: Run Sentinel Scan
+      - name: Run Sentinel Analysis
+        env:
+          SENTINEL_ADMIN_REPO: "https://github.com/DataWizual-Labs/Sentinel-Engine.git"
+          SENTINEL_ALERT_TOKEN: ${{ secrets.SENTINEL_INSTALL_TOKEN }}
+          SENTINEL_CONFIG: "./sentinel.yaml"
         run: |
           sentinel scan .
