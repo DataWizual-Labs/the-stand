@@ -23,7 +23,7 @@ jobs:
           SENTINEL_ALERT_TOKEN: ""
           SENTINEL_CONFIG: "./sentinel.yaml"
         run: |
-          sentinel scan . --report sentinel_report.txt
+          sentinel scan . --report
 
       - name: Upload Security Report
         if: always()
