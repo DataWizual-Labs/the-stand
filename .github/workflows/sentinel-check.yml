@@ -22,5 +22,6 @@ jobs:
           SENTINEL_ADMIN_REPO: "DataWizual-Labs/Sentinel-Engine"
           SENTINEL_ALERT_TOKEN: ${{ secrets.SENTINEL_INSTALL_TOKEN }}
           SENTINEL_CONFIG: "./sentinel.yaml"
+          DEBUG: "true"
         run: |
           sentinel scan .
