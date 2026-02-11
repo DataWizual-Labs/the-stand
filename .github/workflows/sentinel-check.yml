@@ -23,8 +23,7 @@ jobs:
           SENTINEL_ALERT_TOKEN: ""
           SENTINEL_CONFIG: "./sentinel.yaml"
         run: |
-          sentinel scan . --report > full_sentinel_log.txt 2>&1 || true
-
+          sentinel scan . --report > full_sentinel_log.txt 2>&1
       - name: Upload Security Report
         if: always()
         uses: actions/upload-artifact@v4
