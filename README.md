@@ -1,3 +1,18 @@
+# 🛡️ Sentinel Core Security Gate
+
+**The only deterministic enforcement engine that blocks insecure code before it hits production.**
+
+## 🚀 Quick Start & Live Demo
+Don't just read about it—test it yourself in our controlled environment:
+👉 **[Try the Live Demo (the-stand)](https://github.com/DataWizual-Labs/the-stand)**
+
+### 💡 Why Sentinel Core?
+* **Deterministic**: No "maybe" or "low/high" risks. Only **ALLOW** or **BLOCK**.
+* **Zero-Telemetry**: Your code never leaves your runner.
+* **Hardware-Bound**: Enterprise security locked to your specific infrastructure.
+
+---
+
 # 🛡️ Sentinel Core — Client Demo Procedure (the-stand)
 
 This demo uses a controlled GitHub repository called **`the-stand`** to demonstrate how **Sentinel Core** acts as a **Deterministic Security Enforcement Gate** inside a CI/CD pipeline.
