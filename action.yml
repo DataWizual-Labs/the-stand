@@ -1,0 +1,16 @@
+name: 'Sentinel Core Security Gate'
+description: 'Enforce security invariants and block unsafe code with Zero-Telemetry engine.'
+author: 'DataWizual'
+inputs:
+  path:
+    description: 'Path to scan'
+    required: true
+    default: '.'
+runs:
+  using: 'composite'
+  steps:
+    - name: Run Sentinel Core
+      shell: bash
+      run: |
+        echo "Running Sentinel Core Deterministic Gate..."
+        sentinel scan ${{ inputs.path }} --report
