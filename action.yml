@@ -14,3 +14,7 @@ runs:
       run: |
         echo "Running Sentinel Core Deterministic Gate..."
         sentinel scan ${{ inputs.path }} --report
+
+branding:
+  icon: 'alert-circle'
+  color: 'red'
